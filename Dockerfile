@@ -1,11 +1,7 @@
-FROM tomcat:9.0-jdk17
+FROM tomcat:10.1-jdk17-temurin
 
-WORKDIR /usr/local/tomcat/webapps
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-COPY nttin02email.war ./ROOT.war
+COPY nttin02email.war /usr/local/tomcat/webapps/ROOT.war
 
-COPY server.xml /usr/local/tomcat/conf/server.xml
-
-EXPOSE 8080  
-
-CMD ["catalina.sh", "run"]
+CMD ["bash","-lc","sed -ri 's/port=\"8080\"/port=\"${PORT:-8080}\"/' /usr/local/tomcat/conf/server.xml && catalina.sh run"]
